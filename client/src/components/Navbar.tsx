@@ -3,23 +3,27 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { LanguageSelector } from './LanguageSelector';
-import { Calendar, ArrowRight } from 'lucide-react';
+import { Calendar, CalendarCheck, ArrowRight } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
 
   return (
-    <nav className="bg-white/90 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
+    <nav className="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-teal-600 font-black text-xl tracking-tight">
-          <div className="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center shadow-md shadow-teal-600/20">
-            <Calendar className="w-5 h-5" />
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 text-white flex items-center justify-center shadow-md shadow-teal-600/25 ring-2 ring-teal-500/20 group-hover:scale-105 transition-all">
+            <CalendarCheck className="w-5 h-5 stroke-[2.2]" />
           </div>
-          <span>Bookly<span className="text-slate-900">Pro</span></span>
-          <span className="text-[10px] uppercase font-bold bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-200">
-            {t.moroccoBadge}
-          </span>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5 leading-none">
+              <span className="font-black text-xl tracking-tight text-slate-900">Bookly<span className="text-teal-600">Pro</span></span>
+              <span className="text-[10px] uppercase font-extrabold bg-teal-50 text-teal-700 px-1.5 py-0.5 rounded-md border border-teal-200/80">
+                🇲🇦 {t.moroccoBadge}
+              </span>
+            </div>
+          </div>
         </Link>
 
         <div className="flex items-center gap-3">

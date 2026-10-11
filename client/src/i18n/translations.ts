@@ -48,6 +48,14 @@ export interface Translations {
   durationLabel: string;
   specialistLabel: string;
   contactOnWhatsapp: string;
+  back: string;
+  previousStep: string;
+  stepServices: string;
+  stepStaff: string;
+  stepTime: string;
+  stepDetails: string;
+  verifiedBusiness: string;
+  backToOverview: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -98,7 +106,15 @@ export const translations: Record<Language, Translations> = {
     backHome: "Retour à l'accueil",
     durationLabel: "Durée",
     specialistLabel: "Collaborateur",
-    contactOnWhatsapp: "Contacter le salon sur WhatsApp"
+    contactOnWhatsapp: "Contacter le salon sur WhatsApp",
+    back: "Retour",
+    previousStep: "Étape précédente",
+    stepServices: "Prestation",
+    stepStaff: "Collaborateur",
+    stepTime: "Date & Heure",
+    stepDetails: "Coordonnées",
+    verifiedBusiness: "Établissement vérifié",
+    backToOverview: "Retour à la vue d'ensemble"
   },
   ar: {
     demoSalonAmina: "عرض توضيحي : صالون أمينة (فاس)",
@@ -147,7 +163,15 @@ export const translations: Record<Language, Translations> = {
     backHome: "العودة للرئيسية",
     durationLabel: "المدة",
     specialistLabel: "المصفف / الأخصائي",
-    contactOnWhatsapp: "التواصل مع الصالون عبر واتساب"
+    contactOnWhatsapp: "التواصل مع الصالون عبر واتساب",
+    back: "رجوع",
+    previousStep: "الخطوة السابقة",
+    stepServices: "الخدمة",
+    stepStaff: "المصفف",
+    stepTime: "الموعد",
+    stepDetails: "المعلومات",
+    verifiedBusiness: "صالون موثق",
+    backToOverview: "الرجوع للوحة التحكم"
   },
   en: {
     demoSalonAmina: "Demo: Salon Amina (Fez)",
@@ -196,6 +220,14 @@ export const translations: Record<Language, Translations> = {
     backHome: "Back to Home",
     durationLabel: "Duration",
     specialistLabel: "Specialist",
-    contactOnWhatsapp: "Contact salon on WhatsApp"
+    contactOnWhatsapp: "Contact salon on WhatsApp",
+    back: "Back",
+    previousStep: "Previous step",
+    stepServices: "Service",
+    stepStaff: "Staff",
+    stepTime: "Date & Time",
+    stepDetails: "Details",
+    verifiedBusiness: "Verified establishment",
+    backToOverview: "Back to dashboard"
   }
 };

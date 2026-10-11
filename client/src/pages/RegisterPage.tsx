@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
-import { Calendar, Lock, Mail, User, Store, MapPin, ArrowRight, AlertCircle } from 'lucide-react';
+import { Calendar, Lock, Mail, User, Store, MapPin, ArrowRight, ArrowLeft, AlertCircle } from 'lucide-react';
 import { LanguageSelector } from '../components/LanguageSelector';
+import { useLanguage } from '../context/LanguageContext';
 
 export const RegisterPage: React.FC = () => {
   const { register, googleLogin } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const [fullName, setFullName] = useState('');
@@ -41,6 +43,14 @@ export const RegisterPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+      <Link
+        to="/"
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 text-xs font-bold border border-slate-200/90 shadow-xs transition-all active:scale-95 group"
+      >
+        <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-slate-900 rtl:rotate-180 transition-transform group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5" />
+        <span>{t.backHome}</span>
+      </Link>
+
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
         <LanguageSelector />
       </div>
