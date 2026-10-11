@@ -1,0 +1,29 @@
+# OS & Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.iml
+
+# Node / Frontend
+client/node_modules/
+client/dist/
+client/.env.local
+client/.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Java / Backend
+server/target/
+server/.mvn/.develocity/
+server/*.log
+server/uploads/
+uploads/
+*.class
+
+# Environment files with secrets
+.env
+!.env.example
