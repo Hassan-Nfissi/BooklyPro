@@ -2,28 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/client';
 import { PublicBusiness, ServiceItem, StaffItem, SlotItem } from '../types';
+import { useLanguage } from '../context/LanguageContext';
+import { LanguageSelector } from '../components/LanguageSelector';
 import {
   Calendar,
   Clock,
   Phone,
   MapPin,
-  User,
   Check,
   AlertCircle,
   ArrowRight,
   ArrowLeft,
-  Scissors
+  MessageCircle
 } from 'lucide-react';
 
 export const PublicBookingPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { t, isRtl } = useLanguage();
 
   const [business, setBusiness] = useState<PublicBusiness | null>(null);
   const [loadingBusiness, setLoadingBusiness] = useState(true);
   const [errorBusiness, setErrorBusiness] = useState<string | null>(null);
 
-  // Booking Flow Steps: 1: Service, 2: Staff, 3: Date & Slot, 4: Client Info
+  // Flow: 1: Service, 2: Staff, 3: Date & Slot, 4: Client Info
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
   const [selectedStaff, setSelectedStaff] = useState<StaffItem | null>(null);
@@ -32,7 +34,7 @@ export const PublicBookingPage: React.FC = () => {
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<SlotItem | null>(null);
 
-  // Client Details Form
+  // Form
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
@@ -46,7 +48,7 @@ export const PublicBookingPage: React.FC = () => {
         const res = await api.get(`/public/businesses/${slug}`);
         setBusiness(res.data);
       } catch (err: any) {
-        setErrorBusiness(err.response?.data?.message || 'Page introuvable ou non publiée');
+        setErrorBusiness(err.response?.data?.message || 'Page introuvable');
       } finally {
         setLoadingBusiness(false);
       }
@@ -108,7 +110,7 @@ export const PublicBookingPage: React.FC = () => {
   if (loadingBusiness) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-slate-500 font-medium">Chargement de la page de réservation...</div>
+        <div className="text-slate-500 font-medium">{t.searchingSlots}</div>
       </div>
     );
   }
@@ -124,15 +126,17 @@ export const PublicBookingPage: React.FC = () => {
   }
 
   const primaryColor = business.branding?.primaryColor || '#0d9488';
+  const rawPhone = business.phone?.replace(/[^0-9]/g, '') || '212600000000';
+  const cleanPhone = rawPhone.startsWith('0') ? '212' + rawPhone.substring(1) : rawPhone;
 
   return (
-    <div className="min-h-screen bg-slate-100/60 pb-12">
-      {/* Business Header Banner */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-2xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-4">
+    <div className="min-h-screen bg-slate-100/70 pb-16">
+      {/* Top Header with branding & Language Switcher */}
+      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-extrabold text-2xl shadow-md flex-shrink-0"
+              className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-extrabold text-xl shadow-md flex-shrink-0"
               style={{ backgroundColor: primaryColor }}
             >
               {business.branding?.logoUrl ? (
@@ -143,45 +147,57 @@ export const PublicBookingPage: React.FC = () => {
             </div>
 
             <div>
-              <h1 className="text-2xl font-black text-slate-900 tracking-tight">{business.name}</h1>
-              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-1 font-medium">
-                <span className="flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
+              <h1 className="text-lg font-black text-slate-900 tracking-tight leading-tight">{business.name}</h1>
+              <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                <span className="flex items-center gap-1 font-medium">
+                  <MapPin className="w-3 h-3 text-slate-400" />
                   <span>{business.city}{business.address ? ` • ${business.address}` : ''}</span>
                 </span>
-                {business.phone && (
-                  <span className="flex items-center gap-1">
-                    <Phone className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{business.phone}</span>
-                  </span>
-                )}
               </div>
             </div>
           </div>
 
-          {business.branding?.welcomeMessage && (
-            <p className="mt-4 text-xs sm:text-sm text-slate-600 bg-slate-50 border border-slate-100 p-3 rounded-xl italic">
-              "{business.branding.welcomeMessage}"
-            </p>
-          )}
+          <div className="flex items-center gap-2">
+            <LanguageSelector />
+          </div>
         </div>
       </header>
 
       {/* Main Container */}
       <main className="max-w-2xl mx-auto px-4 mt-6">
+        {/* Welcome Callout & WhatsApp CTA */}
+        {business.branding?.welcomeMessage && (
+          <div className="mb-5 p-3.5 bg-white rounded-2xl border border-slate-200/70 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <p className="text-xs text-slate-600 italic">
+              "{business.branding.welcomeMessage}"
+            </p>
+            {business.phone && (
+              <a
+                href={`https://wa.me/${cleanPhone}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl border border-emerald-200 transition-colors flex-shrink-0"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                <span>{t.contactOnWhatsapp}</span>
+              </a>
+            )}
+          </div>
+        )}
+
         {bookingError && (
-          <div className="mb-4 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm flex items-start gap-3">
+          <div className="mb-5 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm flex items-start gap-3">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-500" />
             <span>{bookingError}</span>
           </div>
         )}
 
-        {/* Step 1: Prestation */}
+        {/* Step 1: Services */}
         {currentStep === 1 && (
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
             <div>
-              <h2 className="text-lg font-black text-slate-900">1. Choisissez votre prestation</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Sélectionnez le soin ou le service souhaité</p>
+              <h2 className="text-lg font-black text-slate-900">{t.step1Title}</h2>
+              <p className="text-xs text-slate-500 mt-0.5">{t.step1Sub}</p>
             </div>
 
             <div className="space-y-3">
@@ -194,7 +210,7 @@ export const PublicBookingPage: React.FC = () => {
                   }}
                   className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between gap-4 ${
                     selectedService?.id === srv.id
-                      ? 'border-teal-600 bg-teal-50/20'
+                      ? 'border-teal-600 bg-teal-50/20 shadow-sm'
                       : 'border-slate-100 hover:border-slate-300 bg-white'
                   }`}
                 >
@@ -205,14 +221,14 @@ export const PublicBookingPage: React.FC = () => {
                     )}
                     <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2 font-semibold">
                       <Clock className="w-3.5 h-3.5" />
-                      <span>{srv.durationMinutes} min</span>
+                      <span>{srv.durationMinutes} {t.min}</span>
                     </div>
                   </div>
 
-                  <div className="text-right flex-shrink-0">
-                    <span className="text-base sm:text-lg font-extrabold text-slate-900">{srv.priceMad} MAD</span>
+                  <div className="text-right flex-shrink-0 rtl:text-left">
+                    <span className="text-base sm:text-lg font-extrabold text-slate-900">{srv.priceMad} {t.mad}</span>
                     <button
-                      className="block mt-2 text-xs font-bold px-3 py-1.5 rounded-xl text-white shadow-sm"
+                      className="block mt-2 text-xs font-bold px-3.5 py-1.5 rounded-xl text-white shadow-sm transition-transform active:scale-95"
                       style={{ backgroundColor: primaryColor }}
                     >
                       Choisir
@@ -224,7 +240,7 @@ export const PublicBookingPage: React.FC = () => {
           </div>
         )}
 
-        {/* Step 2: Collaborateur */}
+        {/* Step 2: Staff */}
         {currentStep === 2 && selectedService && (
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -232,14 +248,14 @@ export const PublicBookingPage: React.FC = () => {
                 onClick={() => setCurrentStep(1)}
                 className="text-xs font-bold text-slate-400 hover:text-slate-700 flex items-center gap-1"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Changer de prestation ({selectedService.name})</span>
+                <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
+                <span>{t.changeService} ({selectedService.name})</span>
               </button>
             </div>
 
             <div>
-              <h2 className="text-lg font-black text-slate-900">2. Avec qui souhaitez-vous ce soin ?</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Choisissez votre coiffeur/collaborateur ou premier disponible</p>
+              <h2 className="text-lg font-black text-slate-900">{t.step2Title}</h2>
+              <p className="text-xs text-slate-500 mt-0.5">{t.step2Sub}</p>
             </div>
 
             <div className="space-y-3">
@@ -249,7 +265,7 @@ export const PublicBookingPage: React.FC = () => {
                   setCurrentStep(3);
                 }}
                 className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
-                  selectedStaff === null ? 'border-teal-600 bg-teal-50/20' : 'border-slate-100 hover:border-slate-300'
+                  selectedStaff === null ? 'border-teal-600 bg-teal-50/20 shadow-sm' : 'border-slate-100 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -257,11 +273,11 @@ export const PublicBookingPage: React.FC = () => {
                     ⚡
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 text-sm">N'importe quel collaborateur</h3>
-                    <p className="text-xs text-slate-400">Le premier disponible à l'horaire sélectionné</p>
+                    <h3 className="font-bold text-slate-900 text-sm">{t.anyStaff}</h3>
+                    <p className="text-xs text-slate-400">{t.anyStaffSub}</p>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-400" />
+                <ArrowRight className="w-4 h-4 text-slate-400 rtl:rotate-180" />
               </div>
 
               {business.staff
@@ -274,7 +290,7 @@ export const PublicBookingPage: React.FC = () => {
                       setCurrentStep(3);
                     }}
                     className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
-                      selectedStaff?.id === stf.id ? 'border-teal-600 bg-teal-50/20' : 'border-slate-100 hover:border-slate-300'
+                      selectedStaff?.id === stf.id ? 'border-teal-600 bg-teal-50/20 shadow-sm' : 'border-slate-100 hover:border-slate-300'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -285,7 +301,7 @@ export const PublicBookingPage: React.FC = () => {
                         <h3 className="font-bold text-slate-900 text-sm">{stf.displayName}</h3>
                       </div>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                    <ArrowRight className="w-4 h-4 text-slate-400 rtl:rotate-180" />
                   </div>
                 ))}
             </div>
@@ -300,38 +316,36 @@ export const PublicBookingPage: React.FC = () => {
                 onClick={() => setCurrentStep(2)}
                 className="text-xs font-bold text-slate-400 hover:text-slate-700 flex items-center gap-1"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Retour (Praticien)</span>
+                <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
+                <span>{t.changeStaff}</span>
               </button>
             </div>
 
             <div>
-              <h2 className="text-lg font-black text-slate-900">3. Choisissez la date & l'heure</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Disponibilités vérifiées en temps réel</p>
+              <h2 className="text-lg font-black text-slate-900">{t.step3Title}</h2>
+              <p className="text-xs text-slate-500 mt-0.5">{t.step3Sub}</p>
             </div>
 
-            {/* Date Input */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Date</label>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">{t.dateLabel}</label>
               <input
                 type="date"
                 min={new Date().toISOString().split('T')[0]}
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-teal-500 outline-none"
+                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-teal-500 outline-none"
               />
             </div>
 
-            {/* Slots Grid */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Créneaux horaires disponibles</label>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-2">{t.availableSlots}</label>
 
               {loadingSlots ? (
-                <div className="py-8 text-center text-xs text-slate-400">Recherche des créneaux libres...</div>
+                <div className="py-8 text-center text-xs text-slate-400">{t.searchingSlots}</div>
               ) : availableSlots.length === 0 ? (
-                <div className="py-8 text-center bg-slate-50 rounded-2xl border border-slate-100">
-                  <p className="text-xs font-semibold text-slate-500">Aucun créneau disponible pour cette date.</p>
-                  <p className="text-[11px] text-slate-400 mt-1">L'établissement est peut-être fermé ou tous les créneaux sont réservés.</p>
+                <div className="py-8 text-center bg-slate-50 rounded-2xl border border-slate-100 p-4">
+                  <p className="text-xs font-semibold text-slate-600">{t.noSlots}</p>
+                  <p className="text-[11px] text-slate-400 mt-1">{t.noSlotsSub}</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
@@ -360,7 +374,7 @@ export const PublicBookingPage: React.FC = () => {
           </div>
         )}
 
-        {/* Step 4: Contact & Review */}
+        {/* Step 4: Contact & Confirm */}
         {currentStep === 4 && selectedService && selectedSlot && (
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-6">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -368,76 +382,76 @@ export const PublicBookingPage: React.FC = () => {
                 onClick={() => setCurrentStep(3)}
                 className="text-xs font-bold text-slate-400 hover:text-slate-700 flex items-center gap-1"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Modifier l'horaire</span>
+                <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
+                <span>{t.changeSlot}</span>
               </button>
             </div>
 
-            {/* Summary Recap Card */}
+            {/* Recap Box */}
             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Récapitulatif</span>
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">{t.recap}</span>
               <div className="flex justify-between items-center text-sm font-bold text-slate-900">
                 <span>{selectedService.name}</span>
-                <span className="text-teal-700">{selectedService.priceMad} MAD</span>
+                <span className="text-teal-700">{selectedService.priceMad} {t.mad}</span>
               </div>
               <div className="text-xs text-slate-500 flex flex-wrap gap-x-3 gap-y-1">
-                <span>📅 {new Date(selectedSlot.startTime).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
-                <span>⏰ {selectedSlot.formattedTime} ({selectedService.durationMinutes} min)</span>
-                <span>👤 Avec {selectedSlot.staffName}</span>
+                <span>📅 {new Date(selectedSlot.startTime).toLocaleDateString(t.mad === 'درهم' ? 'ar-MA' : 'fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+                <span>⏰ {selectedSlot.formattedTime} ({selectedService.durationMinutes} {t.min})</span>
+                <span>👤 {selectedSlot.staffName}</span>
               </div>
             </div>
 
             <div>
-              <h2 className="text-lg font-black text-slate-900">4. Vos coordonnées</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Nous vous enverrons la confirmation du rendez-vous</p>
+              <h2 className="text-lg font-black text-slate-900">{t.step4Title}</h2>
+              <p className="text-xs text-slate-500 mt-0.5">{t.step4Sub}</p>
             </div>
 
             <form onSubmit={handleConfirmBooking} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Nom complet *</label>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">{t.fullName}</label>
                 <input
                   type="text"
                   required
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="ex. Fatima Zahra"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 outline-none"
+                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Téléphone (WhatsApp) *</label>
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">{t.phone}</label>
                   <input
                     type="tel"
                     required
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
                     placeholder="06 12 34 56 78"
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 outline-none"
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email (optionnel)</label>
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">{t.emailOptional}</label>
                   <input
                     type="email"
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
-                    placeholder="fatima@example.ma"
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 outline-none"
+                    placeholder="contact@exemple.ma"
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Remarque particulière</label>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">{t.noteOptional}</label>
                 <input
                   type="text"
                   value={customerNote}
                   onChange={(e) => setCustomerNote(e.target.value)}
-                  placeholder="ex. Cheveux longs, première visite..."
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 outline-none"
+                  placeholder="ex. Première visite, cheveux mi-longs..."
+                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 outline-none"
                 />
               </div>
 
@@ -445,11 +459,11 @@ export const PublicBookingPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-3.5 px-4 rounded-xl text-white font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 px-4 rounded-xl text-white font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2 active:scale-98"
                   style={{ backgroundColor: primaryColor }}
                 >
                   <Check className="w-5 h-5" />
-                  <span>{submitting ? 'Validation en cours...' : 'Confirmer mon rendez-vous'}</span>
+                  <span>{submitting ? t.confirming : t.confirmBooking}</span>
                 </button>
               </div>
             </form>

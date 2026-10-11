@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
 import { Calendar, Lock, Mail, User, Store, MapPin, ArrowRight, AlertCircle } from 'lucide-react';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 export const RegisterPage: React.FC = () => {
   const { register, googleLogin } = useAuth();
@@ -39,7 +40,10 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+        <LanguageSelector />
+      </div>
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link to="/" className="inline-flex items-center gap-2 text-teal-600 font-extrabold text-2xl tracking-tight mb-4">
           <div className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center shadow-md shadow-teal-600/20">

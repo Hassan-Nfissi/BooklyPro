@@ -13,6 +13,7 @@ import {
   LogOut,
   Calendar
 } from 'lucide-react';
+import { LanguageSelector } from './LanguageSelector';
 
 export const Sidebar: React.FC = () => {
   const { business, logout } = useAuth();
@@ -87,7 +88,10 @@ export const Sidebar: React.FC = () => {
         })}
       </nav>
 
-      <div className="p-3 border-t border-slate-100">
+      <div className="p-3 border-t border-slate-100 space-y-2">
+        <div className="px-1 flex justify-center">
+          <LanguageSelector />
+        </div>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
