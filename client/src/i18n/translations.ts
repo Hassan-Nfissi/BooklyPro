@@ -256,6 +256,45 @@ export interface Translations {
   cancelBtn: string;
   deleteConfirmTitle: string;
   confirmDeleteBtn: string;
+
+  // SimplyBook.me Inspired Components
+  trustRatingGoogle: string;
+  trustRatingCapterra: string;
+  trustSecured: string;
+  trustMoroccoSalons: string;
+  tabCoreFeatures: string;
+  tabBusinessGrowth: string;
+  tabClientExperience: string;
+  featuresSectionTitle: string;
+  featuresSectionSub: string;
+  industryTitle: string;
+  industrySub: string;
+  industryHair: string;
+  industryHairDesc: string;
+  industrySpa: string;
+  industrySpaDesc: string;
+  industryBeauty: string;
+  industryBeautyDesc: string;
+  industryWellness: string;
+  industryWellnessDesc: string;
+  comparisonTitle: string;
+  comparisonSub: string;
+  comparisonColBefore: string;
+  comparisonColAfter: string;
+  compItem1Before: string;
+  compItem1After: string;
+  compItem2Before: string;
+  compItem2After: string;
+  compItem3Before: string;
+  compItem3After: string;
+  compItem4Before: string;
+  compItem4After: string;
+  finalCtaBadge: string;
+  finalCtaTitle: string;
+  finalCtaSub: string;
+  noCardRequired: string;
+  viewDemoLive: string;
+  liveAgendaSimulator: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -514,7 +553,46 @@ export const translations: Record<Language, Translations> = {
     toastStatusUpdated: "Statut du rendez-vous mis à jour.",
     cancelBtn: "Annuler",
     deleteConfirmTitle: "Êtes-vous sûr de vouloir supprimer cet élément ?",
-    confirmDeleteBtn: "Confirmer la suppression"
+    confirmDeleteBtn: "Confirmer la suppression",
+
+    // SimplyBook.me Inspired Components
+    trustRatingGoogle: "4.9/5 sur Google Reviews",
+    trustRatingCapterra: "4.8/5 Satisfaction clients",
+    trustSecured: "100% Sécurisé & Données protégées",
+    trustMoroccoSalons: "+120 Salons & Spas au Maroc",
+    tabCoreFeatures: "Fonctionnalités Clés",
+    tabBusinessGrowth: "Gestion & Croissance",
+    tabClientExperience: "Expérience Client",
+    featuresSectionTitle: "Tout ce dont vous avez besoin pour développer votre salon",
+    featuresSectionSub: "Des outils modernes inspirés des meilleurs standards mondiaux, adaptés au marché marocain.",
+    industryTitle: "Une solution dédiée à chaque secteur de beauté au Maroc",
+    industrySub: "Que vous dirigiez un salon de coiffure, un spa hammam ou un institut esthétique, BooklyPro s'adapte à vos rituels.",
+    industryHair: "Coiffure & Barbershop",
+    industryHairDesc: "Salons femmes, barbiers traditionnels, coloristes et experts en lissage & kératine.",
+    industrySpa: "Spas & Hammams Marocains",
+    industrySpaDesc: "Bains traditionnels, rituels gommage beldi, massages relaxants et soins orientaux.",
+    industryBeauty: "Esthétique & Onglerie",
+    industryBeautyDesc: "Manucure, pose gel, extensions de cils, microblading et soins du visage ciblés.",
+    industryWellness: "Centres de Bien-être & Soins",
+    industryWellnessDesc: "Détente, drainage lymphatique, coaching et centres de remise en forme.",
+    comparisonTitle: "Pourquoi les professionnels marocains choisissent BooklyPro",
+    comparisonSub: "Comparez la gestion traditionnelle avec la sérénité d'une solution numérique sur-mesure.",
+    comparisonColBefore: "Avant BooklyPro (Gestion Manuelle)",
+    comparisonColAfter: "Avec BooklyPro (Plateforme Digitale)",
+    compItem1Before: "Appels incessants et messages WhatsApp dispersés pendant vos soins",
+    compItem1After: "Page de réservation 24h/24 : vos clients réservent en autonomie",
+    compItem2Before: "Rendez-vous manqués (no-shows) et créneaux perdus sans confirmation",
+    compItem2After: "Reçu officiel PDF téléchargeable et rappels automatiques",
+    compItem3Before: "Risques fréquents de double-réservation sur agenda papier",
+    compItem3After: "Verrouillage transactionnel instantané : zéro conflit garanti",
+    compItem4Before: "Paiement confus et gestion difficile des acomptes",
+    compItem4After: "Tarifs clairs affichés en dirhams (MAD) et paiement facilité sur place",
+    finalCtaBadge: "Modernisez votre salon dès aujourd'hui",
+    finalCtaTitle: "Prêt à remplir votre planning sans passer des heures au téléphone ?",
+    finalCtaSub: "Créez votre page en 2 minutes. Offrez à vos clients l'expérience de réservation la plus fluide du Maroc.",
+    noCardRequired: "Gratuit pour démarrer • Sans carte bancaire • Prêt en 2 min",
+    viewDemoLive: "Tester la démo en direct",
+    liveAgendaSimulator: "Agenda en direct"
   },
 
   ar: {
@@ -772,7 +850,46 @@ export const translations: Record<Language, Translations> = {
     toastStatusUpdated: "تم تحديث حالة الموعد بنجاح.",
     cancelBtn: "إلغاء",
     deleteConfirmTitle: "هل أنت متأكد من رغبتك في حذف هذا العنصر ؟",
-    confirmDeleteBtn: "تأكيد الحذف"
+    confirmDeleteBtn: "تأكيد الحذف",
+
+    // SimplyBook.me Inspired Components
+    trustRatingGoogle: "4.9/5 على تقييمات Google",
+    trustRatingCapterra: "4.8/5 رضا الزبناء والمهنيين",
+    trustSecured: "100% حماية تامة وأمان المعطيات",
+    trustMoroccoSalons: "+120 صالون ومعهد تجميل بالمغرب",
+    tabCoreFeatures: "الميزات الأساسية",
+    tabBusinessGrowth: "إدارة ونمو الصالون",
+    tabClientExperience: "تجربة الزبون",
+    featuresSectionTitle: "كل ما تحتاجه لتسيير وتطوير صالونك باحترافية",
+    featuresSectionSub: "أدوات عصرية مستوحاة من أفضل المعايير العالمية ومصممة خصيصاً للمهنيين في المغرب.",
+    industryTitle: "حل متكامل مصمم لكل مهن التجميل والعناية بالمغرب",
+    industrySub: "سواء كنت تدير صالون حلاقة، سبا حمام مغربي، أو مركز تجميل، تتكيف المنصة مع متطلباتك.",
+    industryHair: "الحلاقة والتصفيف (Barbershop & Coiffure)",
+    industryHairDesc: "صالونات نسائية، حلاقة رجالية راقية، خبراء الصباغة، الكيراتين وعلاج الشعر.",
+    industrySpa: "السبا والحمام المغربي التقليدي",
+    industrySpaDesc: "حمامات بلدية، جلسات التقشير بالصابون البلدي، التدليك والاسترخاء الملكي.",
+    industryBeauty: "العناية بالبشرة وتركيب الأظافر والرموش",
+    industryBeautyDesc: "مانيكير وباديكير، جل، تركيب الرموش، مايكروبليدينغ وجلسات تنظيف البشرة.",
+    industryWellness: "مراكز العناية والراحة والاسترخاء",
+    industryWellnessDesc: "علاجات طبيعية، تصريف ليمفاوي، لياقة بدنية ومراكز التخسيس والعناية بالجسم.",
+    comparisonTitle: "لماذا تختار الصالونات المغربية منصة BooklyPro",
+    comparisonSub: "قارن بين التسيير اليدوي التقليدي وراحة البال مع منصة رقمية متطورة.",
+    comparisonColBefore: "قبل BooklyPro (التسيير التقليدي)",
+    comparisonColAfter: "مع BooklyPro (النظام الرقمي الذكي)",
+    compItem1Before: "مكالمات ورسائل واتساب مستمرة تقاطعك أثناء خدمة الزبناء",
+    compItem1After: "صفحة حجز تعمل 24/7 : زبناؤك يحجزون باستقلالية وسهولة",
+    compItem2Before: "تخلف الزبناء عن المواعيد (No-shows) وخسارة في المداخيل",
+    compItem2After: "وصل حجز رسمي فوري بصيغة PDF وتذكير مباشر عبر واتساب",
+    compItem3Before: "تضارب الحجوزات وأخطاء متكررة في الدفتر الورقي",
+    compItem3After: "قفل حجز فوري ومحكم يضمن عدم تضارب المواعيد بنسبة 100%",
+    compItem4Before: "ارتباك في الأسعار وصعوبة تنظيم الدفعات المسبقة",
+    compItem4After: "أسعار واضحة بالدرهم المغربي (MAD) ودفع مريح بعين المكان",
+    finalCtaBadge: "طور مشروعك وانضم إلى رواد المستقبل",
+    finalCtaTitle: "جاهز لتنظيم جدول مواعيدك دون إضاعة الوقت في الهاتف ؟",
+    finalCtaSub: "أنشئ صفحة حجز صالونك في دقيقتين فقط، ووفر لزبنائك أرقى تجربة حجز في المغرب.",
+    noCardRequired: "مجاني للبدء • بدون بطاقة بنكية • جاهز في دقيقتين",
+    viewDemoLive: "تجربة العرض التوضيحي المباشر",
+    liveAgendaSimulator: "جدول المواعيد المباشر"
   },
 
   en: {
@@ -1030,6 +1147,45 @@ export const translations: Record<Language, Translations> = {
     toastStatusUpdated: "Appointment status updated.",
     cancelBtn: "Cancel",
     deleteConfirmTitle: "Are you sure you want to delete this item?",
-    confirmDeleteBtn: "Confirm deletion"
+    confirmDeleteBtn: "Confirm deletion",
+
+    // SimplyBook.me Inspired Components
+    trustRatingGoogle: "4.9/5 on Google Reviews",
+    trustRatingCapterra: "4.8/5 Client Satisfaction",
+    trustSecured: "100% Secured & Data Protected",
+    trustMoroccoSalons: "+120 Salons & Spas in Morocco",
+    tabCoreFeatures: "Core Features",
+    tabBusinessGrowth: "Business Essentials",
+    tabClientExperience: "Client Experience",
+    featuresSectionTitle: "Everything You Need to Run & Grow Your Salon",
+    featuresSectionSub: "Modern booking software inspired by global industry leaders, tailored for Morocco.",
+    industryTitle: "Tailored for Every Beauty & Wellness Sector in Morocco",
+    industrySub: "Whether you run a luxury hair studio, a Moroccan bath & hammam, or an aesthetic clinic, BooklyPro scales with your craft.",
+    industryHair: "Hair Salons & Barbershops",
+    industryHairDesc: "Women's salons, traditional barber studios, colorists, and keratin & hair care experts.",
+    industrySpa: "Spas & Moroccan Hammams",
+    industrySpaDesc: "Authentic steam baths, beldi soap exfoliating rituals, relaxing massage, and oriental packages.",
+    industryBeauty: "Beauty, Nails & Lashes",
+    industryBeautyDesc: "Manicures, gel nails, lash extensions, microblading, and advanced clinical facials.",
+    industryWellness: "Wellness & Holistic Centers",
+    industryWellnessDesc: "Relaxation therapies, lymphatic drainage, wellness coaching, and fitness centers.",
+    comparisonTitle: "Why Moroccan Beauty Businesses Choose BooklyPro",
+    comparisonSub: "Compare manual scheduling friction with the peace of mind of an automated platform.",
+    comparisonColBefore: "Before BooklyPro (Manual Hassle)",
+    comparisonColAfter: "With BooklyPro (Digital Automation)",
+    compItem1Before: "Endless phone calls and fragmented WhatsApp messages interrupting your client treatments",
+    compItem1After: "24/7 dedicated online booking page: clients schedule autonomously anytime",
+    compItem2Before: "Costly no-shows and wasted empty calendar gaps without validation",
+    compItem2After: "Instant official downloadable PDF receipt & automated WhatsApp appointment reminders",
+    compItem3Before: "Frequent double-booking confusion and overlapping handwriting errors on paper notebooks",
+    compItem3After: "100% transactional slot locking: zero double-booking conflicts guaranteed",
+    compItem4Before: "Price ambiguity and awkward deposit collection at reception",
+    compItem4After: "Clear Moroccan Dirham (MAD) pricing and effortless payment on-site upon arrival",
+    finalCtaBadge: "Upgrade Your Salon Experience Today",
+    finalCtaTitle: "Ready to fill your appointment calendar without endless phone calls?",
+    finalCtaSub: "Set up your page in 2 minutes. Deliver the smoothest booking journey to your clients across Morocco.",
+    noCardRequired: "Free to start • No credit card required • Ready in 2 min",
+    viewDemoLive: "Try Live Salon Demo",
+    liveAgendaSimulator: "Live Agenda Preview"
   }
 };
