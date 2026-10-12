@@ -129,5 +129,11 @@ npm run build
 
 ---
 
+## 👥 Équipe & Direction
+
+- **Hassan Nfissi** — Co-Fondateur & Lead Architect (Maroc 🇲🇦)
+
+---
+
 ## 📄 Licence
 Ce projet est développé dans le cadre du SaaS BooklyPro. Tous droits réservés.

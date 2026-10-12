@@ -56,6 +56,9 @@ export interface Translations {
   stepDetails: string;
   verifiedBusiness: string;
   backToOverview: string;
+  coFounder: string;
+  coFounderCredit: string;
+  craftedInMorocco: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -114,7 +117,10 @@ export const translations: Record<Language, Translations> = {
     stepTime: "Date & Heure",
     stepDetails: "Coordonnées",
     verifiedBusiness: "Établissement vérifié",
-    backToOverview: "Retour à la vue d'ensemble"
+    backToOverview: "Retour à la vue d'ensemble",
+    coFounder: "Co-Fondateur",
+    coFounderCredit: "Co-Fondé par Hassan Nfissi",
+    craftedInMorocco: "Conçu avec passion au Maroc pour les professionnels de service 🇲🇦"
   },
   ar: {
     demoSalonAmina: "عرض توضيحي : صالون أمينة (فاس)",
@@ -171,7 +177,10 @@ export const translations: Record<Language, Translations> = {
     stepTime: "الموعد",
     stepDetails: "المعلومات",
     verifiedBusiness: "صالون موثق",
-    backToOverview: "الرجوع للوحة التحكم"
+    backToOverview: "الرجوع للوحة التحكم",
+    coFounder: "الشريك المؤسس",
+    coFounderCredit: "تطوير وإشراف الشريك المؤسس حسن النفيسي",
+    craftedInMorocco: "تم تصميمه وتطويره بشغف في المغرب لخدمة المهنيين 🇲🇦"
   },
   en: {
     demoSalonAmina: "Demo: Salon Amina (Fez)",
@@ -228,6 +237,9 @@ export const translations: Record<Language, Translations> = {
     stepTime: "Date & Time",
     stepDetails: "Details",
     verifiedBusiness: "Verified establishment",
-    backToOverview: "Back to dashboard"
+    backToOverview: "Back to dashboard",
+    coFounder: "Co-Founder",
+    coFounderCredit: "Co-Founded by Hassan Nfissi",
+    craftedInMorocco: "Crafted with passion in Morocco for service professionals 🇲🇦"
   }
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { useLanguage } from '../context/LanguageContext';
-import { Calendar, CheckCircle2, Clock, Sparkles, Store, ShieldCheck, ArrowRight, ExternalLink } from 'lucide-react';
+import { Calendar, CheckCircle2, Clock, Sparkles, Store, ShieldCheck, ArrowRight, ExternalLink, User } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   const { t, isRtl } = useLanguage();
@@ -104,8 +104,33 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-8 text-center text-sm text-slate-500">
-        <p>© 2026 BooklyPro — Conçu pour les professionnels de service au Maroc 🇲🇦</p>
+      <footer className="border-t border-slate-200/80 bg-white py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col items-center md:items-start gap-1">
+            <div className="flex items-center gap-2">
+              <span className="font-black text-lg tracking-tight text-slate-900">Bookly<span className="text-teal-600">Pro</span></span>
+              <span className="text-[10px] uppercase font-bold bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-200">
+                🇲🇦 Maroc
+              </span>
+            </div>
+            <p className="text-xs text-slate-500">{t.craftedInMorocco}</p>
+          </div>
+
+          {/* Co-Founder credit badge */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-gradient-to-r from-teal-50 via-emerald-50 to-teal-50 border border-teal-200/80 shadow-2xs">
+            <div className="w-7 h-7 rounded-full bg-teal-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
+              HN
+            </div>
+            <div className="text-left rtl:text-right">
+              <span className="text-[10px] font-bold text-teal-700 uppercase tracking-wider block leading-none">{t.coFounder}</span>
+              <span className="text-xs font-black text-slate-900 leading-tight">Hassan Nfissi</span>
+            </div>
+          </div>
+
+          <p className="text-xs text-slate-400 text-center md:text-right">
+            © 2026 BooklyPro. Tous droits réservés.
+          </p>
+        </div>
       </footer>
     </div>
   );
