@@ -56,12 +56,10 @@ export const LoginPage: React.FC = () => {
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
         <LanguageSelector />
       </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link to="/" className="inline-flex items-center gap-2 text-teal-600 font-extrabold text-2xl tracking-tight mb-4">
-          <div className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center shadow-md shadow-teal-600/20">
-            <Calendar className="w-6 h-6" />
-          </div>
-          <span>Bookly<span className="text-slate-900">Pro</span></span>
+        <Link to="/" className="inline-block mb-4">
+          <img src="/logo.png" alt="BooklyPro" className="h-12 w-auto object-contain mx-auto" />
         </Link>
         <h2 className="text-2xl font-bold tracking-tight text-slate-900">Connexion à votre espace</h2>
         <p className="mt-2 text-sm text-slate-500">

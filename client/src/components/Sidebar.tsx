@@ -38,11 +38,9 @@ export const Sidebar: React.FC = () => {
     <aside className="w-64 bg-white border-r border-slate-200/90 flex flex-col h-screen sticky top-0 shadow-xs">
       <div className="p-4 border-b border-slate-100 flex items-center justify-between">
         <Link to="/dashboard" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 text-white flex items-center justify-center shadow-md shadow-teal-600/20 ring-2 ring-teal-500/20 group-hover:scale-105 transition-all">
-            <Calendar className="w-5 h-5 stroke-[2.2]" />
-          </div>
+          <img src="/logo-icon.png" alt="BooklyPro" className="w-8 h-8 object-contain group-hover:scale-105 transition-transform" />
           <div className="flex flex-col">
-            <span className="font-black text-lg tracking-tight text-slate-900 leading-tight">Bookly<span className="text-teal-600">Pro</span></span>
+            <span className="font-black text-lg tracking-tight text-slate-900 leading-tight">Bookly<span className="text-emerald-600">Pro</span></span>
             <span className="text-[10px] font-semibold text-slate-400">Espace Pro Maroc</span>
           </div>
         </Link>
