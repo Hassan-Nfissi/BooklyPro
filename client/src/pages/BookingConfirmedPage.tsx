@@ -18,7 +18,7 @@ import {
 
 export const BookingConfirmedPage: React.FC = () => {
   const { reference } = useParams<{ reference: string }>();
-  const { t, isRtl } = useLanguage();
+  const { t, isRtl, language } = useLanguage();
 
   const [appointment, setAppointment] = useState<AppointmentItem | null>(null);
   const [business, setBusiness] = useState<{ name: string; city?: string; address?: string; phone?: string } | null>(null);
@@ -120,11 +120,11 @@ export const BookingConfirmedPage: React.FC = () => {
             <div className="pt-2 border-t border-slate-200/60 space-y-1.5 text-xs text-slate-600">
               <div className="flex items-center gap-2">
                 <Calendar className="w-3.5 h-3.5 text-teal-600 flex-shrink-0" />
-                <span>{new Date(appointment.startsAt).toLocaleDateString(t.mad === 'درهم' ? 'ar-MA' : 'fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                <span>{new Date(appointment.startsAt).toLocaleDateString(language === 'ar' ? 'ar-MA' : language === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-3.5 h-3.5 text-teal-600 flex-shrink-0" />
-                <span>{new Date(appointment.startsAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
+                <span>{new Date(appointment.startsAt).toLocaleTimeString(language === 'ar' ? 'ar-MA' : language === 'fr' ? 'fr-FR' : 'en-US', { hour: '2-digit', minute: '2-digit' })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <User className="w-3.5 h-3.5 text-teal-600 flex-shrink-0" />

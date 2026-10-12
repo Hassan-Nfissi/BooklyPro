@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
-import { Calendar, Lock, Mail, ArrowRight, ArrowLeft, Zap, AlertCircle } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ArrowLeft, Zap, AlertCircle } from 'lucide-react';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { useLanguage } from '../context/LanguageContext';
+import { useToast } from '../context/ToastContext';
 
 export const LoginPage: React.FC = () => {
   const { login, googleLogin, devLogin } = useAuth();
-  const { t } = useLanguage();
+  const { t, isRtl } = useLanguage();
+  const toast = useToast();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -44,16 +46,18 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen bg-slate-50/80 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+      {/* Back to Home Link */}
       <Link
         to="/"
-        className="absolute top-4 left-4 sm:top-6 sm:left-6 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 text-xs font-bold border border-slate-200/90 shadow-xs transition-all active:scale-95 group"
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 rtl:left-auto rtl:right-4 sm:rtl:right-6 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 text-xs font-bold border border-slate-200/90 shadow-2xs transition-all active:scale-95 group"
       >
         <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-slate-900 rtl:rotate-180 transition-transform group-hover:-translate-x-0.5 rtl:group-hover:translate-x-0.5" />
         <span>{t.backHome}</span>
       </Link>
 
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+      {/* Language Selector */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 rtl:right-auto rtl:left-4 sm:rtl:left-6">
         <LanguageSelector />
       </div>
 
@@ -61,17 +65,18 @@ export const LoginPage: React.FC = () => {
         <Link to="/" className="inline-block mb-4">
           <img src="/logo.png" alt="BooklyPro" className="h-12 w-auto object-contain mx-auto" />
         </Link>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">Connexion à votre espace</h2>
-        <p className="mt-2 text-sm text-slate-500">
-          Gérez vos rendez-vous, collaborateurs et services
+        <h2 className="text-2xl font-black tracking-tight text-slate-900">
+          {t.loginTitle}
+        </h2>
+        <p className="mt-2 text-xs sm:text-sm text-slate-500">
+          {t.loginSub}
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
-        <div className="bg-white py-8 px-6 shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-100 sm:px-10">
-          
+        <div className="bg-white py-8 px-6 sm:px-10 shadow-xl shadow-slate-200/50 rounded-3xl border border-slate-100">
           {error && (
-            <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm flex items-start gap-3">
+            <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm flex items-start gap-3">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-500" />
               <span>{error}</span>
             </div>
@@ -83,13 +88,13 @@ export const LoginPage: React.FC = () => {
               onClick={handleDevLogin}
               disabled={loading}
               type="button"
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal-500 to-emerald-600 text-white py-3 px-4 rounded-xl font-bold text-sm hover:from-teal-600 hover:to-emerald-700 shadow-md shadow-teal-500/20 transition-all"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all active:scale-95 disabled:opacity-50"
             >
               <Zap className="w-4 h-4 text-amber-300 fill-amber-300" />
-              <span>1-Clic Démo (Salon Amina, Fès)</span>
+              <span>{t.oneClickDemo}</span>
             </button>
-            <p className="text-[11px] text-center text-slate-400 mt-1.5">
-              Accès instantané sans mot de passe pour tester l'application
+            <p className="text-[11px] text-center text-slate-400 mt-2">
+              {t.oneClickDemoSub}
             </p>
           </div>
 
@@ -98,11 +103,13 @@ export const LoginPage: React.FC = () => {
               <div className="w-full border-t border-slate-200"></div>
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-slate-400 font-medium">Ou continuer avec</span>
+              <span className="bg-white px-3 text-slate-400 font-bold tracking-wider">
+                {t.orDivider}
+              </span>
             </div>
           </div>
 
-          {/* Google OAuth Token Exchange Popup */}
+          {/* Google OAuth Login */}
           <div className="mb-6 flex justify-center">
             <GoogleLogin
               onSuccess={async (credentialResponse) => {
@@ -115,40 +122,45 @@ export const LoginPage: React.FC = () => {
                   }
                 }
               }}
-              onError={() => setError('Connexion Google échouée ou annulée')}
+              onError={() => setError('Connexion Google annulée')}
               text="signin_with"
               shape="rectangular"
               locale="fr"
             />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Email / Password Form */}
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email</label>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                {t.emailLabel} *
+              </label>
               <div className="relative">
-                <Mail className="w-5 h-5 text-slate-400 absolute left-3 top-2.5" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 rtl:left-auto rtl:right-3.5 top-3.5" />
                 <input
                   type="email"
                   required
+                  placeholder="nom@salon.ma"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="votre@email.com"
-                  className="w-full pl-10 pr-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                  className="w-full pl-10 rtl:pl-3.5 rtl:pr-10 pr-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Mot de passe</label>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                {t.passwordLabel} *
+              </label>
               <div className="relative">
-                <Lock className="w-5 h-5 text-slate-400 absolute left-3 top-2.5" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 rtl:left-auto rtl:right-3.5 top-3.5" />
                 <input
                   type="password"
                   required
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                  className="w-full pl-10 rtl:pl-3.5 rtl:pr-10 pr-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                 />
               </div>
             </div>
@@ -156,17 +168,20 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-2.5 px-4 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all mt-2"
+              className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-3 px-4 rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-800 shadow-md transition-all active:scale-95 disabled:opacity-50 mt-2"
             >
-              <span>Se connecter</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>{loading ? t.confirming : t.signInBtn}</span>
+              <ArrowRight className="w-4 h-4 rtl:rotate-180" />
             </button>
           </form>
 
-          <div className="mt-6 text-center text-xs text-slate-500">
-            Vous n'avez pas encore de compte ?{' '}
-            <Link to="/register" className="font-bold text-teal-600 hover:text-teal-700">
-              Créer votre page gratuitement
+          {/* Register Prompt */}
+          <div className="mt-6 text-center">
+            <span className="text-xs text-slate-500">
+              {t.noAccountPrompt}{' '}
+            </span>
+            <Link to="/register" className="text-xs font-bold text-emerald-700 hover:underline">
+              {t.register}
             </Link>
           </div>
         </div>

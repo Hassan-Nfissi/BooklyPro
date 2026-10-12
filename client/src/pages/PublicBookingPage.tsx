@@ -23,7 +23,7 @@ import {
 export const PublicBookingPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { t, isRtl } = useLanguage();
+  const { t, isRtl, language } = useLanguage();
 
   const [business, setBusiness] = useState<PublicBusiness | null>(null);
   const [loadingBusiness, setLoadingBusiness] = useState(true);
@@ -530,7 +530,7 @@ export const PublicBookingPage: React.FC = () => {
               <div className="text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1.5 pt-1 border-t border-slate-200/60 font-medium">
                 <span className="inline-flex items-center gap-1">
                   <CalendarCheck className="w-3.5 h-3.5 text-teal-600" />
-                  <span>{new Date(selectedSlot.startTime).toLocaleDateString(t.mad === 'درهم' ? 'ar-MA' : 'fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+                  <span>{new Date(selectedSlot.startTime).toLocaleDateString(language === 'ar' ? 'ar-MA' : language === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
                 </span>
                 <span className="inline-flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-teal-600" />

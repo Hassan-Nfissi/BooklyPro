@@ -2,21 +2,35 @@ import React, { useEffect, useState } from 'react';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { Branding } from '../types';
-import { Palette, Upload, Copy, Check, Eye } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { useToast } from '../context/ToastContext';
+import { Palette, Upload, Copy, Check, Eye, Smartphone, Sparkles, Globe } from 'lucide-react';
+
+const CURATED_PALETTES = [
+  { name: 'Émeraude Royale', hex: '#059669', desc: 'Salons de coiffure & spas' },
+  { name: 'Vert Forêt Profond', hex: '#065f46', desc: 'Barbershops & soins premium' },
+  { name: 'Bleu Majorelle', hex: '#1d4ed8', desc: 'Instituts modernes' },
+  { name: 'Terracotta & Ambre', hex: '#c2410c', desc: 'Hammams & esthétique' },
+  { name: 'Ardoise Prestige', hex: '#0f172a', desc: 'Luxe & minimaliste' },
+];
 
 export const DashboardBranding: React.FC = () => {
   const { business, refreshUser } = useAuth();
+  const { t } = useLanguage();
+  const toast = useToast();
+
   const [branding, setBranding] = useState<Branding | null>(null);
-  const [primaryColor, setPrimaryColor] = useState('#0d9488');
+  const [primaryColor, setPrimaryColor] = useState('#059669');
   const [welcomeMessage, setWelcomeMessage] = useState('');
   const [copied, setCopied] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const fetchBranding = async () => {
     try {
       const res = await api.get('/owner/business/branding');
       setBranding(res.data);
-      setPrimaryColor(res.data.primaryColor || '#0d9488');
+      setPrimaryColor(res.data.primaryColor || '#059669');
       setWelcomeMessage(res.data.welcomeMessage || '');
     } catch (err) {
       console.error(err);
@@ -28,16 +42,19 @@ export const DashboardBranding: React.FC = () => {
   }, []);
 
   const handleSave = async () => {
+    setSaving(true);
     try {
       await api.put('/owner/business/branding', {
         primaryColor,
         themeKey: 'custom',
         welcomeMessage,
       });
-      alert('Personnalisation enregistrée !');
+      toast.success(t.toastSaved);
       fetchBranding();
     } catch (err) {
-      alert('Erreur lors de l’enregistrement');
+      toast.error(t.toastError);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -46,12 +63,14 @@ export const DashboardBranding: React.FC = () => {
     try {
       if (business.published) {
         await api.post('/owner/business/unpublish');
+        toast.info(t.toastSaved);
       } else {
         await api.post('/owner/business/publish');
+        toast.success(t.toastSaved);
       }
       refreshUser();
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Erreur lors du changement de statut de publication');
+      toast.error(err.response?.data?.message || t.toastError);
     }
   };
 
@@ -60,7 +79,8 @@ export const DashboardBranding: React.FC = () => {
     const url = `${window.location.origin}/book/${business.slug}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    toast.success(t.linkCopied);
+    setTimeout(() => setCopied(false), 2500);
   };
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,9 +94,9 @@ export const DashboardBranding: React.FC = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setBranding(res.data);
-      alert('Logo mis à jour avec succès !');
+      toast.success(t.toastSaved);
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Erreur lors du téléchargement');
+      toast.error(err.response?.data?.message || t.toastError);
     } finally {
       setUploadingLogo(false);
     }
@@ -84,156 +104,226 @@ export const DashboardBranding: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Title & Action Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/60">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Page de réservation & Branding</h1>
-          <p className="text-sm text-slate-500 mt-1">Personnalisez l'apparence de votre lien public et publiez-le</p>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            {t.brandingTitle}
+          </h1>
+          <p className="text-sm text-slate-500 mt-1 font-medium">
+            {t.brandingSub}
+          </p>
         </div>
 
         {business && (
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={handleCopyLink}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition-all"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-2xs transition-all active:scale-95"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-              <span>{copied ? 'Lien copié !' : 'Copier mon lien'}</span>
+              {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-slate-500" />}
+              <span>{copied ? t.linkCopied : t.copyLinkBtn}</span>
             </button>
 
             <button
               onClick={handleTogglePublish}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm ${
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs active:scale-95 ${
                 business.published
-                  ? 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
-                  : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                  ? 'bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100'
+                  : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-600/20'
               }`}
             >
-              {business.published ? 'Mettre hors ligne (Brouillon)' : 'Publier ma page'}
+              <Globe className="w-3.5 h-3.5" />
+              <span>{business.published ? t.unpublishPageBtn : t.publishPageBtn}</span>
             </button>
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm space-y-6">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Logo de l'établissement</label>
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden">
-                {branding?.logoUrl ? (
-                  <img src={branding.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                ) : (
-                  <Palette className="w-6 h-6 text-slate-400" />
-                )}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left Column: Customization Controls */}
+        <div className="lg:col-span-7 space-y-6">
+          {/* Color Palettes Section */}
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs space-y-5">
+            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                <Palette className="w-4 h-4" />
               </div>
-              <div>
-                <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm">
-                  <Upload className="w-4 h-4" />
-                  <span>{uploadingLogo ? 'Envoi...' : 'Télécharger un logo'}</span>
-                  <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
-                </label>
-                <p className="text-[11px] text-slate-400 mt-1">PNG, JPG ou WEBP (max 5 Mo)</p>
+              <h2 className="text-base font-black text-slate-900">
+                {t.themeColorLabel}
+              </h2>
+            </div>
+
+            {/* Recommended Swatches */}
+            <div>
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-3">
+                {t.recommendedPalettes}
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {CURATED_PALETTES.map((p) => {
+                  const selected = primaryColor.toLowerCase() === p.hex.toLowerCase();
+                  return (
+                    <button
+                      key={p.hex}
+                      type="button"
+                      onClick={() => setPrimaryColor(p.hex)}
+                      className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all ${
+                        selected
+                          ? 'border-emerald-600 bg-emerald-50/40 shadow-xs ring-2 ring-emerald-600/20'
+                          : 'border-slate-200/80 hover:bg-slate-50'
+                      }`}
+                    >
+                      <span
+                        className="w-7 h-7 rounded-xl flex-shrink-0 shadow-xs border border-white"
+                        style={{ backgroundColor: p.hex }}
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-xs font-black text-slate-800">{p.name}</span>
+                        <span className="text-[10px] text-slate-400 font-medium">{p.desc}</span>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Couleur principale de marque</label>
-            <div className="flex items-center gap-3">
-              {['#0d9488', '#0284c7', '#7c3aed', '#db2777', '#ea580c', '#1e293b'].map((color) => (
-                <button
-                  key={color}
-                  onClick={() => setPrimaryColor(color)}
-                  style={{ backgroundColor: color }}
-                  className={`w-8 h-8 rounded-full border-2 transition-transform ${
-                    primaryColor === color ? 'scale-110 border-white shadow-md' : 'border-transparent'
-                  }`}
+            {/* Custom Hex Color Picker */}
+            <div className="pt-2">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                {t.customColorLabel}
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  value={primaryColor}
+                  onChange={(e) => setPrimaryColor(e.target.value)}
+                  className="w-12 h-10 rounded-xl cursor-pointer border border-slate-200 p-1 bg-white"
                 />
-              ))}
-              <input
-                type="color"
-                value={primaryColor}
-                onChange={(e) => setPrimaryColor(e.target.value)}
-                className="w-8 h-8 rounded-full cursor-pointer border-0 p-0"
-              />
+                <input
+                  type="text"
+                  value={primaryColor}
+                  onChange={(e) => setPrimaryColor(e.target.value)}
+                  className="w-36 px-3 py-2 border border-slate-200 rounded-xl font-mono text-xs font-bold uppercase focus:ring-2 focus:ring-emerald-500 outline-none"
+                />
+              </div>
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Message d'accueil client</label>
+          {/* Welcome Message Section */}
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              {t.welcomeMessageLabel}
+            </label>
             <textarea
               rows={3}
+              placeholder={t.welcomeMessagePlaceholder}
               value={welcomeMessage}
               onChange={(e) => setWelcomeMessage(e.target.value)}
-              placeholder="Bienvenue chez nous ! Choisissez votre prestation ci-dessous."
-              className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 outline-none"
+              className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none resize-none"
             />
+            <p className="text-xs text-slate-400">
+              Ce message sera affiché sous le nom de votre salon sur votre page publique de réservation.
+            </p>
           </div>
 
-          <button
-            onClick={handleSave}
-            className="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-all"
-          >
-            Enregistrer les modifications
-          </button>
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all active:scale-95 disabled:opacity-50"
+            >
+              {saving ? t.confirming : t.saveBrandingBtn}
+            </button>
+          </div>
         </div>
 
-        <div className="bg-slate-100 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5" />
-                <span>Aperçu smartphone</span>
+        {/* Right Column: Live Smartphone Simulator */}
+        <div className="lg:col-span-5 flex flex-col items-center">
+          <div className="w-full max-w-xs">
+            <div className="flex items-center justify-between mb-3 px-2">
+              <span className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                <Smartphone className="w-4 h-4 text-emerald-600" />
+                <span>{t.livePreviewTitle}</span>
               </span>
-              <span className="text-[10px] font-bold bg-white px-2 py-0.5 rounded-full text-slate-600">Simulateur</span>
+              <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                Simulateur
+              </span>
             </div>
 
-            <div className="bg-white rounded-3xl p-5 shadow-lg border border-slate-200/80 space-y-4">
-              <div className="flex items-center gap-3">
+            {/* Mobile Device Mockup */}
+            <div className="bg-slate-900 p-3.5 rounded-[40px] shadow-2xl border-4 border-slate-800">
+              {/* Notch */}
+              <div className="w-24 h-4 bg-slate-900 mx-auto rounded-b-xl mb-2 flex justify-center items-center">
+                <div className="w-2.5 h-2.5 rounded-full bg-slate-800"></div>
+              </div>
+
+              {/* Screen */}
+              <div className="bg-slate-50 rounded-[28px] overflow-hidden min-h-[460px] flex flex-col">
+                {/* Header with selected brand color */}
                 <div
-                  className="w-12 h-12 rounded-2xl text-white font-extrabold flex items-center justify-center text-lg"
+                  className="p-5 text-white transition-colors duration-300 relative"
                   style={{ backgroundColor: primaryColor }}
                 >
-                  {business ? business.name.charAt(0) : 'B'}
+                  <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-xs flex items-center justify-center font-black text-sm mb-3">
+                    BP
+                  </div>
+                  <h3 className="font-black text-base leading-tight">
+                    {business?.name || 'Salon Amina'}
+                  </h3>
+                  <p className="text-[11px] text-white/80 mt-1 line-clamp-2">
+                    {welcomeMessage || t.welcomeMessagePlaceholder}
+                  </p>
+                  <span className="inline-block mt-2 text-[9px] font-bold bg-white/25 px-2 py-0.5 rounded-full">
+                    📍 {business?.city || 'Fès'} • {business?.phone || '+212 5...'}
+                  </span>
                 </div>
-                <div>
-                  <h3 className="font-bold text-slate-900 text-sm">{business?.name || 'Mon Établissement'}</h3>
-                  <p className="text-[11px] text-slate-400">{business?.city || 'Casablanca'} • MAD</p>
+
+                {/* Simulated Content */}
+                <div className="p-3.5 flex-1 space-y-2.5">
+                  <div className="text-[11px] font-black text-slate-700 uppercase tracking-wider">
+                    {t.stepServices}
+                  </div>
+
+                  {/* Prestation Mock Item */}
+                  <div className="p-3 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-black text-slate-800 block">Coupe & Brushing</span>
+                      <span className="text-[10px] text-slate-400">45 {t.min}</span>
+                    </div>
+                    <span
+                      className="text-xs font-black px-2 py-1 rounded-lg text-white"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      150 {t.mad}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-black text-slate-800 block">Soin Capillaire Argan</span>
+                      <span className="text-[10px] text-slate-400">60 {t.min}</span>
+                    </div>
+                    <span
+                      className="text-xs font-black px-2 py-1 rounded-lg text-white"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      250 {t.mad}
+                    </span>
+                  </div>
+
+                  {/* Booking CTA Mock */}
+                  <div className="pt-2">
+                    <div
+                      className="w-full py-2.5 rounded-xl text-white text-center font-bold text-xs shadow-xs"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      {t.confirmBooking}
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              <p className="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl italic">
-                "{welcomeMessage || 'Prenez rendez-vous en quelques clics.'}"
-              </p>
-
-              <div className="p-3 rounded-xl border border-slate-100 space-y-1">
-                <div className="flex justify-between items-center text-xs font-bold text-slate-800">
-                  <span>Coupe & Coiffure</span>
-                  <span style={{ color: primaryColor }}>150 MAD</span>
-                </div>
-                <div className="text-[10px] text-slate-400">45 minutes</div>
-              </div>
-
-              <div
-                className="w-full py-2 rounded-xl text-white text-xs font-bold text-center shadow-sm"
-                style={{ backgroundColor: primaryColor }}
-              >
-                Prendre rendez-vous
               </div>
             </div>
-          </div>
-
-          <div className="mt-6 text-center">
-            {business && (
-              <a
-                href={`/book/${business.slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-bold text-teal-700 hover:underline"
-              >
-                Ouvrir la vraie page publique ↗
-              </a>
-            )}
           </div>
         </div>
       </div>
