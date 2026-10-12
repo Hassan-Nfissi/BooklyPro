@@ -1,0 +1,7 @@
+{
+    email {$ACME_EMAIL:admin@duckdns.org}
+}
+
+{$DOMAIN_NAME:localhost} {
+    reverse_proxy frontend:80
+}
