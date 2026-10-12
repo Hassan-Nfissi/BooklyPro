@@ -49,30 +49,11 @@ services:
         VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-sample-google-client-id.apps.googleusercontent.com}
     container_name: booklypro-frontend
     restart: unless-stopped
-    expose:
-      - "80"
+    ports:
+      - "3000:80"
     depends_on:
       - backend
-
-  caddy:
-    image: caddy:2-alpine
-    container_name: booklypro-caddy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - DOMAIN_NAME=${DOMAIN_NAME:-localhost}
-      - ACME_EMAIL=${ACME_EMAIL:-admin@duckdns.org}
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      - frontend
 
 volumes:
   postgres_data:
   uploads_data:
-  caddy_data:
-  caddy_config:
